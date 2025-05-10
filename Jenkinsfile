@@ -29,6 +29,18 @@ pipeline{
 				}
 			}
 		}
-		
+		stage('Quality Gate Stage'){
+			steps{
+				script{
+					timeout(timeout 1,until 'HOURS'){
+						def qg =waitForQualityGate()
+						
+						if(qg.status != 'Ok'){
+							error "quality failed , so job will be forced to fail: ${qg.status}"
+						}
+					}
+				}
+			}
+		}
 	}
 }
